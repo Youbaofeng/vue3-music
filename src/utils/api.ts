@@ -3,6 +3,7 @@ import type {DjProgram, Personalized, PersonalizedMv, PersonalizedNewSong} from 
 import type {PlayListDetail, PlaylistHighqualityTag} from "@/models/playlist";
 import type {PlayListCat} from "@/models/playlist_cat";
 import type {Song} from "@/models/song";
+import type {Comment} from "@/models/comment";
 import type {SongUrl} from "@/models/song_url";
 import type {TopListDetail} from "@/models/toplist_detail";
 import http from "@/utils/http";
@@ -50,6 +51,11 @@ export async function usePlayListTrackAll(id: number) {
     const {songs} = await http.get<{ songs: Song[] }>('playlist/track/all', {id: id})
     return songs
 }
+
+export async function usePlayListReviewAll(id: number) {
+    const {comments} = await http.get<{ comments: Comment[]}>('/comment/playlist',{id: id})
+    return comments
+} 
 
 export async function useTopListDetail() {
     const {list} = await http.get<{ list: TopListDetail[] }>('/toplist/detail')

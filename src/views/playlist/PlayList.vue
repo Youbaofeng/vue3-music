@@ -6,7 +6,9 @@
         <el-tab-pane lazy :label="`歌曲 ${songs.length}`" name="tracks">
           <SongList :songs="songs"/>
         </el-tab-pane>
-        <el-tab-pane lazy label="评论" name="comments"/>
+        <el-tab-pane lazy label="评论" name="comments">
+          <CommentList :comments="comments" />
+        </el-tab-pane>
       </el-tabs>
     </div>
   </div>
@@ -15,18 +17,21 @@
 <script setup lang="ts">
 import {useRoute} from "vue-router";
 import {onMounted, ref} from "vue";
-import {usePlayListDetail, usePlayListTrackAll} from "@/utils/api";
+import {usePlayListDetail, usePlayListTrackAll, usePlayListReviewAll} from "@/utils/api";
 import Info from "@/views/playlist/Info.vue";
 import SongList from "@/views/playlist/SongList.vue";
 import type {PlayListDetail} from "@/models/playlist";
 import type {Song} from "@/models/song";
+import type {Comment} from "@/models/comment";
 import {usePlayerStore} from "@/stores/player";
+import CommentList from "@/views/playlist/CommentList.vue";
 
 const tab = ref('tracks')
 
 const route = useRoute();
 const playlist = ref<PlayListDetail>();
 const songs = ref<Song[]>([]);
+const comments = ref<Comment[]>([]);
 
 const {pushPlayList, play} = usePlayerStore()
 
@@ -45,6 +50,10 @@ const getData = () => {
   })
   usePlayListTrackAll(id).then(res => {
     songs.value = res
+  })
+  usePlayListReviewAll(id).then(res => {
+    comments.value = res 
+    console.log(comments.value)
   })
 }
 onMounted(getData)
